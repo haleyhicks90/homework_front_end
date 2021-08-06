@@ -1,7 +1,7 @@
 //Dependencies
 import logo from './logo.svg';
 import './App.css';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 const App = () => {
@@ -64,6 +64,39 @@ const App = () => {
             })
     }
 
+    const handleDelete = (recipeData) => {
+        axios
+            .delete(`http://localhost:3000/recipes/${recipeData._id}`)
+            .then(() => {
+                axios
+                    .get('http://localhost:3000/recipes')
+                    .then((response) => {
+                        setRecipes(response.data)
+                    })
+            })
+    }
+
+    const handleEdit = (recipeData) => {
+        axios
+            .put(`http://localhost:3000/recipes/${recipeData._id}`,
+                {
+                    name: recipeData.name,
+                    category: recipeData.category,
+                    image: recipeData.image
+                }
+            )
+            .then(() => {
+                axios
+                    .get('http://localhost:3000/recipes')
+                    .then((response) => {
+                        setRecipes(response.data)
+                    })
+            })
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //rendering to the browser
+    ////////////////////////////////////////////////////////////////////////////
     return (
         <main>
             <h1>Yummy Recipes!</h1>
@@ -82,8 +115,20 @@ const App = () => {
                 <h2>Recipe List</h2>
                     <ul>
                         {
-                            recipes.map(() => {
-
+                            recipes.map((recipe) => {
+                                return <li>
+                                    {
+                                        <>Recipe Name: {recipe.name}</>
+                                    }<br />
+                                    {
+                                        <>Category: {recipe.category}</>
+                                    }<br />
+                                    {
+                                        <img src={recipe.image} width="620" height="500" />
+                                    }<br />
+                                    <button onClick={ (event) => { handleEdit(recipe) } }>Edit</button>
+                                    <button onClick={ (event) => { handleDelete(recipe) } }>Delete</button>
+                                </li>
                             })
                         }
                     </ul>
@@ -91,3 +136,6 @@ const App = () => {
         </main>
     )
 }
+
+
+export default App
