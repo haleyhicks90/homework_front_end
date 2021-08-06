@@ -55,19 +55,38 @@ const App = () => {
                 category: newCategory,
                 image: newImage
             }
-        )
+        ).then(() => {
+                axios
+                    .get('http://localhost:3000/recipes')
+                    .then((response) => {
+                        setRecipes(response.data)
+                    })
+            })
     }
 
     return (
         <main>
-            <h1>Recipe List</h1>
+            <h1>Yummy Recipes!</h1>
+
             <section>
-                <form onSubmit={handleNewRecipeFormSubmit}>
-                    Name: <input type='text' onChange={handleNewName} /> <br/>
-                    Category: <input type='text' onChange={handleNewCategory} /> <br/>
-                    Image: <input typr='text' onChange={handleNewImage} /> <br/>
-                    <input type='submit' value="Create Recipe" />
-                </form>
+                <h2>Create a Recipe</h2>
+                    <form onSubmit={handleNewRecipeFormSubmit}>
+                        Name: <input type='text' onChange={handleNewName} /> <br/>
+                        Category: <input type='text' onChange={handleNewCategory} /> <br/>
+                        Image: <input typr='text' onChange={handleNewImage} /> <br/>
+                        <input type='submit' value="Create Recipe" />
+                    </form>
+            </section>
+
+            <section>
+                <h2>Recipe List</h2>
+                    <ul>
+                        {
+                            recipes.map(() => {
+
+                            })
+                        }
+                    </ul>
             </section>
         </main>
     )
